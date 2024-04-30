@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Catch the Money!</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+        #game-container {
+            width: 100%;
+            height: 100vh;
+            position: relative;
+            background-color: #00f;
+        }
+        .money {
+            position: absolute;
+            width: 50px;
+            height: 50px;
+            background-image: url('https://www.onlygfx.com/wp-content/uploads/2020/11/stack-of-gold-coins-7-1024x657.png'); /* Money icon */
+            background-size: cover;
+        }
+        #score {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            color: #fff;
+            font-size: 24px;
+        }
+    </style>
+</head>
+<body>
+    <div id="game-container">
+        <div id="score">Score: 0</div>
+    </div>
+
+    <script>
+        let score = 0;
+        let moneyCount = 0;
+
+        function startGame() {
+            setInterval(dropMoney, 1000);
+        }
+
+        function dropMoney() {
+            const money = document.createElement('div');
+            money.className = 'money';
+            money.style.left = `${Math.random() * (window.innerWidth - 50)}px`;
+            document.getElementById('game-container').appendChild(money);
+
+            moneyCount++;
+
+            const gravity = setInterval(() => {
+                const moneyTop = parseInt(money.style.top) || 0; // Handle initial top value
+                money.style.top = `${moneyTop + 1}px`;
+
+                if (moneyTop > window.innerHeight) {
+                    clearInterval(gravity);
+                    money.remove();
+                    moneyCount--;
+
+                    if (moneyCount >= 5) {
+                        alert('Game Over! Your final score: ' + score);
+                        resetGame();
+                    }
+                }
+            }, 10);
+
+            money.onclick = () => {
+                money.remove();
+                clearInterval(gravity);
+                score++;
+                document.getElementById('score').innerText = 'Score: ' + score;
+                moneyCount--;
+
+                if (moneyCount >= 5) {
+                    alert('Bạn đã nhận được: ' + score + ",000,000,000đ");
+                    resetGame();
+                }
+            };
+        }
+
+        function resetGame() {
+            score = 0;
+            moneyCount = 0;
+            document.getElementById('score').innerText = 'Score: 0';
+        }
+
+        startGame();
+    </script>
+</body>
+</html>
